@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+#TODO clean this up
 
 ## functions to shorten commands
 function yab() { yabai -m $*; }
@@ -59,14 +60,6 @@ config active_window_border_color 0xffa6a8d2
 signal event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse"
 signal event=space_changed action="yabai -m window --focus $(yabai -m query --windows --window | jq ".id")"
 signal event=application_terminated action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse"
-
-#testing signals
-signal event=window_destroyed action="terminal-notifier -message 'window_destroyed'"
-signal event=application_terminated action="terminal-notifier -message 'application_terminated'"
-
-## If I close the active window, focus on any other visible window.
-signal event=window_destroyed action="bash /Users/jesseskelton/CustomScripts/SwitchSpaces/window-focus-on-destroy.sh"
-signal event=space_changed action="export CUR_ACTIVE_APP=\"iTerm2\""
 
 # float system preferences. Most of these just disable Yabai form resizing them.
 rule app="^System Preferences$"  layer=above manage=off
