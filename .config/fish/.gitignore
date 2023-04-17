@@ -1,0 +1,6 @@
+fish_variables
+conf.d/fzf.fish
+functions/*
+!functions/dotfiles.fish
+completions/
+!completions/et.fish

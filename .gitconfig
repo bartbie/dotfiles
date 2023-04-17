@@ -1,0 +1,22 @@
+[include]
+    # load user & credential info
+    path = ~/.config/git/user
+[init]
+	defaultBranch = main
+[core]
+    excludesFile = ~/.config/git/ignore
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+[diff]
+	tool = vimdiff3
+[merge]
+	conflictstyle = diff3
+	tool = vimdiff3
+[difftool "vimdiff3"]
+	path = nvim
+[mergetool "vimdiff3"]
+	path = nvim

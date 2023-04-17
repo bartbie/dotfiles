@@ -1,0 +1,102 @@
+#!/usr/bin/env sh
+
+## functions to shorten commands
+function yab() { yabai -m $*; }
+function config() { yab config $*; }
+function space() { yab space $*; }
+function signal() { yab signal --add $*; }
+function rule() { yab rule --add $*; }
+
+# bsp or float (default: bsp)
+config layout bsp
+
+# My custom space names for my 3 monitor setup. These names are used in some of my scripts.
+# space 1 --label one
+# space 2 --label two
+# space 3 --label three
+
+# New window spawns to the right if vertical split, or bottom if horizontal split
+config window_placement second_child
+config window_topmost off
+config window_opacity off
+
+## Window size
+# all windows occupy same space regardless of position in windows tree
+config auto_balance off
+# ratio between size of new old window vs new
+config split_ratio 0.50
+
+## Mouse settings
+# config focus_follows_mouse          autoraise
+# config focus_follows_mouse          on
+## set mouse interaction modifier key (default: fn)
+# config mouse_modifier ctrl
+## set modifier + right-click drag to resize window (default: resize)
+# config mouse_action2 resize
+## set modifier + left-click drag to resize window (default: move)
+# config mouse_action1 move
+
+## Paddings
+local padding = 2
+config top_padding $padding
+config bottom_padding $padding
+config left_padding $padding
+config right_padding $padding
+config window_gap $padding
+
+#border
+local border_width = 1
+config window_border on
+config window_border_width $border_width
+config active_window_border_color 0xffa6a8d2
+
+
+## spacebar
+# SPACEBAR_HEIGHT=$(spacebar -m config height)
+# config external_bar all:$SPACEBAR_HEIGHT:0
+
+# signals
+signal event=window_destroyed action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse"
+signal event=space_changed action="yabai -m window --focus $(yabai -m query --windows --window | jq ".id")"
+signal event=application_terminated action="yabai -m query --windows --window &> /dev/null || yabai -m window --focus mouse"
+
+#testing signals
+signal event=window_destroyed action="terminal-notifier -message 'window_destroyed'"
+signal event=application_terminated action="terminal-notifier -message 'application_terminated'"
+
+## If I close the active window, focus on any other visible window.
+signal event=window_destroyed action="bash /Users/jesseskelton/CustomScripts/SwitchSpaces/window-focus-on-destroy.sh"
+signal event=space_changed action="export CUR_ACTIVE_APP=\"iTerm2\""
+
+# float system preferences. Most of these just disable Yabai form resizing them.
+rule app="^System Preferences$"  layer=above manage=off
+rule app="^Karabiner-Elements$"  layer=above manage=off
+rule app="^Karabiner-EventViewer$"  layer=above manage=off
+rule app="^Finder$"  layer=above manage=off
+rule app="^Keka$"  layer=above manage=off
+rule app="^Alfred Preferences$"  layer=above manage=off
+rule app="^Disk Utility$"  layer=above manage=off
+rule app="^System Information$"  layer=above manage=off
+rule app="^Activity Monitor$"  layer=above manage=off
+rule app="^Path Finder$" manage=off
+rule app="^TeamViewer$" sticky=off layer=above manage=off
+rule app="Fantastical" manage=off
+rule app="^Flux$" manage=off
+rule app="^Time Out$" manage=off
+rule app="^perl_client_app$" manage=off
+rule app="^Harvest$" manage=off
+rule app="^CiscoSparkHelper$" manage=off
+rule app="^Logi Options$" manage=off
+rule app="^Cisco Webex Start$" manage=off
+rule app="^Private Internet Access$" manage=off
+rule app="Wake Up Time$"  layer=above manage=off
+rule app="Emacs" manage=on
+rule app="^Gimp$" layer=above manage=off
+# rule app="^Spotify$" manage=off
+# rule app="^iTerm2$" manage=off
+# rule app="^console$" manage=off
+#find ~/Library/Parallels/Applications\ Menus/ -maxdepth 3 -type f | awk -F'/' '{ print $NF; }' | awk '{$1=$1};1' | sort | uniq | tr "\n" "\0" | xargs -0 -I{} yabai -m rule --add app="^{}\$" title=".*" manage=on
+
+echo "yabai configuration loaded.."
+
+#END
