@@ -49,6 +49,9 @@ end
     alias services 'brew services'
     abbr dot dotfiles
 
+# set_up_ytd_alias
+    alias ytd 'yt-dlp --config-location ~/.config/yt-dpl/config'
+
 # set_up_goofy_aliases
     alias den 'echo æøå'
     alias bruh 'brew'
