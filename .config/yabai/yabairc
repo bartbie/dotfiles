@@ -85,6 +85,7 @@ rule app="^Private Internet Access$" manage=off
 rule app="Wake Up Time$"  layer=above manage=off
 rule app="Emacs" manage=on
 rule app="^Gimp$" layer=above manage=off
+rule app="^VLC$" manage=off
 # rule app="^Spotify$" manage=off
 # rule app="^iTerm2$" manage=off
 # rule app="^console$" manage=off
